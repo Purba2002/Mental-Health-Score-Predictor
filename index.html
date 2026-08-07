@@ -1,151 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mental Health Signal</title>
-<link rel="stylesheet" href="/static/style.css">
-<style>
-  body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-  .container { display: flex; width: 95%; max-width: 1200px; gap: 20px; }
-  .form-panel { flex: 1; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-  .result-panel { flex: 0.7; background: linear-gradient(180deg, #0a3d3a, #1a7a74); color: white; padding: 30px; border-radius: 12px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-  .section-title { font-size: 14px; font-weight: 600; color: #555; margin: 20px 0 10px; }
-  .section-badge { background: #e0e0e0; padding: 2px 8px; border-radius: 4px; margin-right: 8px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-  label { font-size: 13px; color: #444; display: block; margin-bottom: 5px; }
-  input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-  .stress-buttons { display: flex; gap: 8px; }
-  .stress-buttons button { flex: 1; padding: 8px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; }
-  .stress-buttons button.active { background: #d97706; color: white; border-color: #d97706; }
-  .submit-btn { width: 100%; padding: 12px; background: #0a3d3a; color: white; border: none; border-radius: 8px; font-size: 16px; margin-top: 20px; cursor: pointer; }
-  .gauge { width: 150px; height: 80px; margin: 20px auto; position: relative; }
-  .gauge-fill { width: 150px; height: 75px; border: 10px solid #ffffff30; border-bottom: none; border-radius: 150px 150px 0 0; }
-  .gauge-dot { width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; bottom: 0; left: 50%; transform-origin: center -65px; }
-  .score { font-size: 48px; font-weight: bold; }
-  .hidden { display: none; }
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mental Health Signal — Student Wellness Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="form-panel">
-      <form id="mh-form">
-        
-        <!-- 01 PROFILE - ADDED -->
-        <div class="form-section">
-          <div class="section-title"><span class="section-badge">01</span> Profile</div>
-          <div class="grid-2">
-            <div><label>Age</label><input type="number" name="age" required value="21"></div>
-            <div>
-              <label>Gender</label>
-              <select name="gender" required><option>Male</option><option>Female</option></select>
-            </div>
-          </div>
-          <label>Country</label><input type="text" name="country" required value="India">
-        </div>
 
-        <!-- 02 ACADEMIC -->
-        <div class="form-section">
-          <div class="section-title"><span class="section-badge">02</span> Academic & Digital Habits</div>
-          <div class="grid-2">
-            <div>
-              <label>Academic level</label>
-              <select name="academic_level" required><option>High School</option><option selected>Undergraduate</option><option>Graduate</option></select>
-            </div>
-            <div>
-              <label>Most-used platform</label>
-              <select name="most_used_platform" required><option selected>Instagram</option><option>YouTube</option><option>WhatsApp</option></select>
-            </div>
-          </div>
-          <div class="grid-2">
-            <div>
-              <label>Primary purpose</label>
-              <select name="purpose_of_use" required><option>Networking</option><option>Education</option><option selected>Entertainment</option><option>News</option></select>
-            </div>
-            <div><label>Avg. daily screen time</label><input type="number" step="0.1" name="avg_daily_usage_hours" required value="10"></div>
-          </div>
-          <label>Daily phone unlocks</label><input type="number" name="daily_unlocks" required value="60">
-        </div>
+<div class="noise-overlay" aria-hidden="true"></div>
 
-        <!-- 03 LIFESTYLE -->
-        <div class="form-section">
-          <div class="section-title"><span class="section-badge">03</span> Lifestyle & Stress</div>
-          <div class="grid-3">
-            <div><label>Study hours / day</label><input type="number" step="0.1" name="study_hours" required value="2"></div>
-            <div><label>Physical activity / day</label><input type="number" step="0.1" name="physical_activity_hours" required value="1"></div>
-            <div><label>Sleep / night</label><input type="number" step="0.1" name="sleep_hours_per_night" required value="7"></div>
-          </div>
-          <label>Perceived stress level</label>
-          <div class="stress-buttons">
-            <button type="button" data-value="Low">Low</button>
-            <button type="button" data-value="Medium">Medium</button>
-            <button type="button" data-value="High" class="active">High</button>
-            <button type="button" data-value="Very High">Very High</button>
-          </div>
-          <input type="hidden" name="stress_level" id="stress_level" value="High">
-        </div>
-
-        <button type="submit" class="submit-btn">Read my signal</button>
-      </form>
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="result-panel">
-      <div id="state-prompt" class="state">
-        <h2>Your score will appear here</h2>
-        <p>Fill in the form and submit to generate a predicted mental health score from 0-10.</p>
-      </div>
-      <div id="state-loading" class="state hidden">
-        <h2>Reading the signal...</h2>
-        <p>Running your habits through the model.</p>
-        <div class="loader"></div>
-      </div>
-      <div id="state-result" class="state hidden">
-        <h2>Your Mental Health Score</h2>
-        <div class="gauge"><div class="gauge-fill"></div><div class="gauge-dot" id="gauge-dot"></div></div>
-        <div class="score"><span id="score-number">0.0</span><span>/10</span></div>
-        <p id="score-context"></p>
-        <button type="button" id="reset-btn" class="submit-btn" style="background:white; color:#0a3d3a;">Run another read</button>
-      </div>
-    </div>
+<header class="site-header">
+  <div class="header-inner">
+    <span class="eyebrow">Student Wellness Analytics</span>
+    <h1 class="title">Mental Health <em>Signal</em></h1>
+    <p class="subtitle">A quick read on how habits, screen time, and stress are trending — modeled from your daily rhythm, not a diagnosis.</p>
   </div>
+</header>
 
-<script>
-// Stress buttons
-document.querySelectorAll('.stress-buttons button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.stress-buttons button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('stress_level').value = btn.dataset.value;
-  });
-});
+<main class="layout">
 
-// Submit
-document.getElementById('mh-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  document.getElementById('state-prompt').classList.add('hidden');
-  document.getElementById('state-loading').classList.remove('hidden');
+  <!-- FORM PANEL -->
+  <section class="panel form-panel" aria-labelledby="form-heading">
+    <form id="predict-form" novalidate>
 
-  const data = Object.fromEntries(new FormData(e.target).entries());
-  data.age = +data.age; data.avg_daily_usage_hours = +data.avg_daily_usage_hours;
-  data.daily_unlocks = +data.daily_unlocks; data.study_hours = +data.study_hours;
-  data.physical_activity_hours = +data.physical_activity_hours; data.sleep_hours_per_night = +data.sleep_hours_per_night;
+      <fieldset class="group">
+        <legend><span class="legend-index">01</span> Profile</legend>
+        <div class="grid grid-3">
+          <div class="field">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" min="10" max="100" step="1" required placeholder="e.g. 21" />
+            <span class="hint">10–100</span>
+            <span class="error-msg" data-for="age"></span>
+          </div>
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="" disabled selected hidden>Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <span class="error-msg" data-for="gender"></span>
+          </div>
+          <div class="field">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" list="country-list" required placeholder="e.g. India" autocomplete="off" />
+            <datalist id="country-list">
+              <option value="India"></option>
+              <option value="USA"></option>
+              <option value="Canada"></option>
+              <option value="Australia"></option>
+              <option value="UK"></option>
+              <option value="Germany"></option>
+              <option value="Mexico"></option>
+              <option value="Turkey"></option>
+              <option value="France"></option>
+            </datalist>
+            <span class="hint">Not listed? Type it anyway.</span>
+            <span class="error-msg" data-for="country"></span>
+          </div>
+        </div>
+      </fieldset>
 
-  const res = await fetch('/predict', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-  const result = await res.json();
-  
-  document.getElementById('state-loading').classList.add('hidden');
-  document.getElementById('state-result').classList.remove('hidden');
-  document.getElementById('score-number').textContent = result.predicted_mental_health_score.toFixed(1);
-  
-  // Animate gauge
-  const score = result.predicted_mental_health_score;
-  const deg = (score / 10) * 180 - 90;
-  document.getElementById('gauge-dot').style.transform = `rotate(${deg}deg)`;
-});
+      <fieldset class="group">
+        <legend><span class="legend-index">02</span> Academic &amp; Digital Habits</legend>
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="academic_level">Academic level</label>
+            <select id="academic_level" name="academic_level" required>
+              <option value="" disabled selected hidden>Select</option>
+              <option value="High School">High School</option>
+              <option value="Undergraduate">Undergraduate</option>
+              <option value="Graduate">Graduate</option>
+            </select>
+            <span class="error-msg" data-for="academic_level"></span>
+          </div>
+          <div class="field">
+            <label for="most_used_platform">Most-used platform</label>
+            <select id="most_used_platform" name="most_used_platform" required>
+              <option value="" disabled selected hidden>Select</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Snapchat">Snapchat</option>
+              <option value="Twitter">Twitter</option>
+              <option value="YouTube">YouTube</option>
+              <option value="TikTok">TikTok</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="LINE">LINE</option>
+              <option value="KakaoTalk">KakaoTalk</option>
+              <option value="VKontakte">VKontakte</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="WeChat">WeChat</option>
+            </select>
+            <span class="error-msg" data-for="most_used_platform"></span>
+          </div>
+          <div class="field">
+            <label for="purpose_of_use">Primary purpose</label>
+            <select id="purpose_of_use" name="purpose_of_use" required>
+              <option value="" disabled selected hidden>Select</option>
+              <option value="Networking">Networking</option>
+              <option value="Education">Education</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="News">News</option>
+            </select>
+            <span class="error-msg" data-for="purpose_of_use"></span>
+          </div>
+          <div class="field">
+            <label for="avg_daily_usage_hours">Avg. daily screen time</label>
+            <div class="unit-input">
+              <input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0" max="24" step="0.1" required placeholder="0.0" />
+              <span class="unit">hrs</span>
+            </div>
+            <span class="error-msg" data-for="avg_daily_usage_hours"></span>
+          </div>
+          <div class="field">
+            <label for="daily_unlocks">Daily phone unlocks</label>
+            <input type="number" id="daily_unlocks" name="daily_unlocks" min="0" step="1" required placeholder="e.g. 60" />
+            <span class="error-msg" data-for="daily_unlocks"></span>
+          </div>
+        </div>
+      </fieldset>
 
-document.getElementById('reset-btn').onclick = () => location.reload();
-</script>
+      <fieldset class="group">
+        <legend><span class="legend-index">03</span> Lifestyle &amp; Stress</legend>
+        <div class="grid grid-3">
+          <div class="field">
+            <label for="study_hours">Study hours / day</label>
+            <div class="unit-input">
+              <input type="number" id="study_hours" name="study_hours" min="0" max="24" step="0.1" required placeholder="0.0" />
+              <span class="unit">hrs</span>
+            </div>
+            <span class="error-msg" data-for="study_hours"></span>
+          </div>
+          <div class="field">
+            <label for="physical_activity_hours">Physical activity / day</label>
+            <div class="unit-input">
+              <input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="0.1" required placeholder="0.0" />
+              <span class="unit">hrs</span>
+            </div>
+            <span class="error-msg" data-for="physical_activity_hours"></span>
+          </div>
+          <div class="field">
+            <label for="sleep_hours_per_night">Sleep / night</label>
+            <div class="unit-input">
+              <input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0" max="24" step="0.1" required placeholder="0.0" />
+              <span class="unit">hrs</span>
+            </div>
+            <span class="error-msg" data-for="sleep_hours_per_night"></span>
+          </div>
+          <div class="field field-span">
+            <label for="stress_level">Perceived stress level</label>
+            <div class="segmented" id="stress_level_group" data-name="stress_level">
+              <button type="button" class="seg-btn" data-value="Low">Low</button>
+              <button type="button" class="seg-btn" data-value="Medium">Medium</button>
+              <button type="button" class="seg-btn" data-value="High">High</button>
+              <button type="button" class="seg-btn" data-value="Very High">Very High</button>
+            </div>
+            <input type="hidden" id="stress_level" name="stress_level" required />
+            <span class="error-msg" data-for="stress_level"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-footer">
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="btn-label">Read my signal</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- RESULT PANEL -->
+  <aside class="panel result-panel" aria-live="polite">
+    <div class="result-inner" id="result-inner">
+
+      <div class="state state-idle" id="state-idle">
+        <svg class="gauge gauge-idle" viewBox="0 0 240 160" aria-hidden="true">
+          <path class="gauge-track" d="M 30 140 A 100 100 0 0 1 210 140" />
+          <g class="gauge-ticks"></g>
+        </svg>
+        <p class="idle-label">Your score will appear here</p>
+        <p class="idle-copy">Fill in the form and submit to generate a predicted mental health score from 0–10.</p>
+      </div>
+
+      <div class="state state-loading" id="state-loading" hidden>
+        <div class="pulse-ring"></div>
+        <p class="loading-label">Reading the signal…</p>
+        <p class="loading-copy">Running your habits through the model.</p>
+      </div>
+
+      <div class="state state-result" id="state-result" hidden>
+        <svg class="gauge gauge-result" viewBox="0 0 240 160" aria-hidden="true">
+          <defs>
+            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#D9534F"/>
+              <stop offset="45%" stop-color="#E3B341"/>
+              <stop offset="100%" stop-color="#4C9A78"/>
+            </linearGradient>
+          </defs>
+          <path class="gauge-track" d="M 30 140 A 100 100 0 0 1 210 140" />
+          <path class="gauge-fill" id="gauge-fill" d="M 30 140 A 100 100 0 0 1 210 140" />
+          <g class="gauge-ticks"></g>
+          <circle class="gauge-needle-hub" cx="120" cy="140" r="5" />
+        </svg>
+        <div class="score-readout">
+          <span class="score-number" id="score-number">0.0</span>
+          <span class="score-max">/10</span>
+        </div>
+        <p class="score-band" id="score-band">—</p>
+        <p class="score-context" id="score-context"></p>
+        <button type="button" class="reset-btn" id="reset-btn">Run another read</button>
+      </div>
+
+      <div class="state state-error" id="state-error" hidden>
+        <div class="error-icon" aria-hidden="true">!</div>
+        <p class="error-copy" id="error-copy"></p>
+        <button type="button" class="reset-btn" id="error-retry-btn">Try again</button>
+      </div>
+
+    </div>
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+  <p>Built for informational purposes only — this is not a clinical assessment. If you're struggling, please talk to someone you trust.</p>
+</footer>
+
+<script src="/static/script.js"></script>
 </body>
 </html>
